@@ -16,7 +16,7 @@ bldblu=${txtbld}$(tput setaf 4) #  blue
 bldcya=${txtbld}$(tput setaf 6) #  cyan
 txtrst=$(tput sgr0)             # Reset
 
-THREADS="16"
+THREADS="9"
 DEVICE="$1"
 EXTRAS="$2"
 
@@ -65,6 +65,9 @@ clear
 
 # decide what device to build for
 case "$DEVICE" in
+   p990)
+       device="p990"
+       echo -e "${cya}Building ${bldcya}ParanoidAndroid v$VERSION ${txtrst}${cya}for LG Optimus 2x ${txtrst}";;
    galaxys2)
        device="galaxys2"
        echo -e "${cya}Building ${bldcya}ParanoidAndroid v$VERSION ${txtrst}${cya}for International Samsung Galaxy S2 ${txtrst}";;
@@ -136,7 +139,7 @@ echo -e ""
 echo -e "${bldblu}Starting compilation ${txtrst}"
 
 # start compilation
-brunch "pa_$device-userdebug";
+brunch "pa_$device-userdebug" 2> warn.log;
 echo -e ""
 
 # if we cant upload the file, status 4 will be sent
@@ -147,4 +150,5 @@ fi
 
 # finished? get elapsed time
 res2=$(date +%s.%N)
-echo "${bldgrn}Total time elapsed: ${txtrst}${grn}$(echo "($res2 - $res1) / 60"|bc ) minutes ($(echo "$res2 - $res1"|bc ) seconds) ${txtrst}"
+#echo "${bldgrn}Total time elapsed: ${txtrst}${grn}$(echo "($res2 - $res1) / 60"|bc ) minutes ($(echo "$res2 - $res1"|bc ) seconds) ${txtrst}"
+echo "done.tonyp"
