@@ -84,13 +84,13 @@ echo -e "${bldblu}Setting up environment ${txtrst}"
 # lunch device
 echo -e ""
 echo -e "${bldblu}Lunching device ${txtrst}"
-lunch "pa_$DEVICE-userdebug";
+lunch "pa_$DEVICE-eng";
 
 echo -e ""
 echo -e "${bldblu}Starting compilation ${txtrst}"
 
 # start compilation
-brunch "pa_$DEVICE-userdebug";
+brunch "pa_$DEVICE-eng";
 echo -e ""
 
 # finished? get elapsed time
