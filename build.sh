@@ -83,7 +83,7 @@ echo -e ""
 echo -e "${bldblu}Starting compilation ${txtrst}"
 
 # start compilation
-make -j"$THREADS"
+brunch "pa_$DEVICE-userdebug";
 echo -e ""
 
 # finished? get elapsed time
