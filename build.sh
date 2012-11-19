@@ -90,7 +90,7 @@ echo -e ""
 echo -e "${bldblu}Starting compilation ${txtrst}"
 
 # start compilation
-brunch "pa_$DEVICE-userdebug";
+mka bacon
 echo -e ""
 
 # finished? get elapsed time
