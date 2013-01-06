@@ -90,9 +90,5 @@ echo -e ""
 echo -e "${bldblu}Starting compilation ${txtrst}"
 
 # start compilation
-mka bacon
+time mka bacon
 echo -e ""
-
-# finished? get elapsed time
-res2=$(date +%s.%N)
-echo "${bldgrn}Total time elapsed: ${txtrst}${grn}$(echo "($res2 - $res1) / 60"|bc ) minutes ($(echo "$res2 - $res1"|bc ) seconds) ${txtrst}"
