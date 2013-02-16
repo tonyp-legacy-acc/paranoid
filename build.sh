@@ -23,8 +23,9 @@ EXTRAS="$2"
 # get current version
 MAJOR=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'PA_VERSION_MAJOR = *' | sed  's/PA_VERSION_MAJOR = //g')
 MINOR=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'PA_VERSION_MINOR = *' | sed  's/PA_VERSION_MINOR = //g')
-MAINTENANCE=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'PA_VERSION_MAINTENANCE = *' | sed  's/PA_VERSION_MAINTENANCE = //g')
-VERSION=$MAJOR.$MINOR$MAINTENANCE
+TONYP_BUILD_NR=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'TONYP_BUILD_NR = *' | sed  's/TONYP_BUILD_NR = //g')
+BLVERSION=$(cat $DIR/device/lge/p990/system.prop | grep 'ro.tonyp.bl=*' | sed  's/ro.tonyp.bl=//g')
+VERSION=$MAJOR.$MINOR-$TONYP_BUILD_NR-$BLVERSION
 
 # if we have not extras, reduce parameter index by 1
 if [ "$EXTRAS" == "true" ] || [ "$EXTRAS" == "false" ]
@@ -38,6 +39,10 @@ fi
 
 # get time of startup
 res1=$(date +%s.%N)
+
+# Remove previous build info
+echo "Removing previous build.prop"
+rm out/target/product/p990/system/build.prop;
 
 # we don't allow scrollback buffer
 echo -e '\0033\0143'
@@ -74,7 +79,13 @@ if [ "$SYNC" == "true" ]
 then
    echo -e "${bldblu}Fetching latest sources ${txtrst}"
    repo sync -j"$THREADS"
+   ./apply_linaro.sh
    echo -e ""
+   MAJOR=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'PA_VERSION_MAJOR = *' | sed  's/PA_VERSION_MAJOR = //g')
+   MINOR=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'PA_VERSION_MINOR = *' | sed  's/PA_VERSION_MINOR = //g')
+   TONYP_BUILD_NR=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'TONYP_BUILD_NR = *' | sed  's/TONYP_BUILD_NR = //g')
+   BLVERSION=$(cat $DIR/device/lge/p990/system.prop | grep 'ro.tonyp.bl=*' | sed  's/ro.tonyp.bl=//g')
+   VERSION=$MAJOR.$MINOR-$TONYP_BUILD_NR-$BLVERSION
 fi
 
 # setup environment
@@ -92,3 +103,14 @@ echo -e "${bldblu}Starting compilation ${txtrst}"
 # start compilation
 time mka bacon
 echo -e ""
+
+# push build
+chmod 644 $DIR/out/target/product/p990/pa_p990-${VERSION}-tonyp.zip
+
+echo "build ready - push to goo.im? (y/n)"
+read -n 1 we_push
+if [ "$we_push" == "y" ]; then
+scp -p2222 $DIR/out/target/product/p990/pa_p990-${VERSION}-tonyp.zip tonyp@upload.goo.im:~/public_html/ParanoidAndroid-P990/${BLVERSION}/
+fi
+echo ""
+echo "scp -p2222 $DIR/out/target/product/p990/pa_p990-${VERSION}-tonyp.zip tonyp@upload.goo.im:~/public_html/ParanoidAndroid-P990/${BLVERSION}/"
