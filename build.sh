@@ -31,10 +31,10 @@ VERSION=$MAJOR.$MINOR-$TONYP_BUILD_NR-$BLVERSION
 if [ "$EXTRAS" == "true" ] || [ "$EXTRAS" == "false" ]
 then
    SYNC="$2"
-   UPLOAD="$3"
+   CHANGELOG="$3"
 else
    SYNC="$3"
-   UPLOAD="$4"
+   CHANGELOG="$4"
 fi
 
 # get time of startup
@@ -79,7 +79,10 @@ if [ "$SYNC" == "true" ]
 then
    echo -e "${bldblu}Fetching latest sources ${txtrst}"
    repo sync -j"$THREADS"
-   ./generate_changelog.sh
+   if [ "$CHANGELOG" == "true" ]
+   then
+       ./generate_changelog.sh
+   fi
    ./apply_linaro.sh
    echo -e ""
    MAJOR=$(cat $DIR/vendor/pa/config/pa_common.mk | grep 'PA_VERSION_MAJOR = *' | sed  's/PA_VERSION_MAJOR = //g')
